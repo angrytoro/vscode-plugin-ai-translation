@@ -1,0 +1,50 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "运行扩展",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/out/**/*.js"
+      ],
+      "preLaunchTask": "${defaultBuildTask}",
+      "presentation": {
+        "hidden": false
+      }
+    },
+    {
+      "name": "运行扩展 (无构建)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/out/**/*.js"
+      ],
+      "presentation": {
+        "hidden": false
+      }
+    },
+    {
+      "name": "Webview 调试",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src/webview/views",
+      "presentation": {
+        "hidden": false
+      }
+    },
+    {
+      "name": "附加到扩展主机",
+      "type": "extensionHost",
+      "request": "attach",
+      "port": 5870
+    }
+  ]
+}

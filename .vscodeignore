@@ -1,0 +1,58 @@
+# VSCode specific
+.vscode/**
+.vscode-test/**
+
+# Source code
+src/**
+**/*.ts
+**/*.map
+
+# Build configuration
+tsconfig.json
+tsconfig.webview.json
+vite.config.ts
+vite.config.js
+vite.config.js.map
+tailwind.config.js
+postcss.config.js
+.eslintrc.json
+
+# Testing
+jest.config.js
+jest.setup.js
+jest.vscode.mock.js
+**/*.test.ts
+**/*.spec.ts
+coverage/**
+
+# Dependencies
+node_modules/**
+.yarnrc
+package-lock.json
+
+# Build outputs
+*.vsix
+dist/
+
+# Development files
+test.md
+DEBUG.md
+DEBUG_GUIDE.md
+TESTING.md
+diagnose.sh
+
+# Documentation (exclude internal docs)
+docs/**
+PUBLISHING.md
+CLAUDE.md
+
+# OS and editor files
+.DS_Store
+*.log
+.gitignore
+
+# Claude settings
+.claude/**
+
+# Git worktrees
+.worktrees/**

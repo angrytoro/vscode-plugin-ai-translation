@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Test coverage
+coverage/
+
+# Build outputs
+out/
+dist/
+*.vsix
+src/webview/views/dist/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.vscode-test/
+.idea/
+*.iml
+.project
+.settings/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Temporary files
+*.tmp
+*.temp
+
+# Git worktrees
+.worktrees/
+
+PUBLISHING.md
+CLAUDE.md
+.claude/
+diagnose.sh

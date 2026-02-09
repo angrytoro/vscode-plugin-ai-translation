@@ -1,0 +1,88 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm: compile",
+      "type": "shell",
+      "command": "npm run compile",
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "silent"
+      },
+      "detail": "编译 TypeScript 代码"
+    },
+    {
+      "label": "npm: build:webview",
+      "type": "shell",
+      "command": "npm run build:webview",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "detail": "构建 React Webview 应用"
+    },
+    {
+      "label": "npm: compile",
+      "type": "shell",
+      "command": "npm run compile",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "全部构建",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "npm: compile",
+        "npm: build:webview"
+      ],
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "编译扩展 + 构建 webview"
+    },
+    {
+      "label": "测试",
+      "type": "shell",
+      "command": "npm test",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "测试覆盖率",
+      "type": "shell",
+      "command": "npm run test:coverage",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "监听模式",
+      "type": "shell",
+      "command": "npm run watch",
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "监听 Webview",
+      "type": "shell",
+      "command": "npm run dev:webview",
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always"
+      }
+    }
+  ]
+}
