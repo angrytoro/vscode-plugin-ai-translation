@@ -33,6 +33,7 @@ package-lock.json
 # Build outputs
 *.vsix
 dist/
+!dist/webview/**
 
 # Development files
 test.md

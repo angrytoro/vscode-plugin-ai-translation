@@ -18,7 +18,7 @@
     "node_modules",
     ".vscode-test",
     "**/*.test.ts",
-    "src/webview/views/dist",
+    "dist",
     "src/webview/components",
     "src/webview/utils/bundle.ts"
   ]

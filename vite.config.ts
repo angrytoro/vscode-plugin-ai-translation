@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [react()],
     build: {
-        outDir: 'src/webview/views/dist',
+        outDir: 'dist/webview',
         target: 'es2015',
         rollupOptions: {
             input: resolve(__dirname, 'src/webview/components/index.tsx'),

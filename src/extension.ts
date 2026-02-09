@@ -44,8 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
             {
                 enableScripts: true,
                 localResourceRoots: [
-                    vscode.Uri.joinPath(context.extensionUri, 'src', 'webview', 'views'),
-                    vscode.Uri.joinPath(context.extensionUri, 'src', 'webview', 'views', 'dist'),
+                    vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview'),
                 ],
                 retainContextWhenHidden: true,
             }
@@ -292,11 +291,11 @@ export function deactivate() {
  * 生成 Webview HTML
  */
 function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): string {
-    const scriptPath = vscode.Uri.joinPath(extensionUri, 'src', 'webview', 'views', 'dist', 'app.js');
+    const scriptPath = vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'app.js');
     const scriptUri = webview.asWebviewUri(scriptPath);
-    const cssPath = vscode.Uri.joinPath(extensionUri, 'src', 'webview', 'views', 'dist', 'app-main.css');
+    const cssPath = vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'app-index.css');
     const cssUri = webview.asWebviewUri(cssPath);
-    const baseUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'src', 'webview', 'views', 'dist'));
+    const baseUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview'));
 
     return `<!DOCTYPE html>
 <html lang="en">
