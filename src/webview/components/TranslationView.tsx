@@ -130,16 +130,16 @@ export const TranslationView: React.FC<TranslationViewProps> = ({ vscode }) => {
                      content ? '✅' : '⏳'}
                 </span>
                 <span style={styles.progressText}>
-                    {error ? 'Translation failed' :
+                    {error ? '翻译失败' :
                      currentStatus === 'config_checking' ? '验证配置中...' :
                      currentStatus === 'cache_checking' ? '检查缓存中...' :
                      currentStatus === 'api_connecting' ? '连接 AI 服务中...' :
                      currentStatus === 'translating' ? `翻译中... ${getPercentage()}%` :
                      currentStatus === 'completing' ? '完成并缓存中...' :
                      currentStatus === 'aborted' ? '已中止' :
-                     isInitializing ? 'Preparing translation...' :
-                     isStreaming ? `${progress.status || 'Translating...'} ${getPercentage()}% (${formatBytes(progress.loaded)}/${formatBytes(progress.total)})` :
-                     content ? 'Translation complete' : 'Ready'}
+                     isInitializing ? '准备翻译中...' :
+                     isStreaming ? `${progress.status || '翻译中...'} ${getPercentage()}% (${formatBytes(progress.loaded)}/${formatBytes(progress.total)})` :
+                     content ? '翻译完成' : '就绪'}
                 </span>
             </div>
 
@@ -153,13 +153,13 @@ export const TranslationView: React.FC<TranslationViewProps> = ({ vscode }) => {
                         ...(error ? {} : styles.hidden)
                     }}
                 >
-                    🔄 Retry
+                    🔄 重试
                 </button>
                 <button onClick={handleOpenSettings} style={styles.button}>
-                    ⚙️ Settings
+                    ⚙️ 设置
                 </button>
                 <button onClick={handleClear} style={styles.button}>
-                    🗑️ Clear
+                    🗑️ 清空
                 </button>
             </div>
 
@@ -167,7 +167,7 @@ export const TranslationView: React.FC<TranslationViewProps> = ({ vscode }) => {
             {error && (
                 <div style={styles.errorBanner}>
                     <span>{error}</span>
-                    <button onClick={handleRetry} style={styles.button}>Retry</button>
+                    <button onClick={handleRetry} style={styles.button}>重试</button>
                 </div>
             )}
 
@@ -196,14 +196,14 @@ export const TranslationView: React.FC<TranslationViewProps> = ({ vscode }) => {
                         gap: '16px'
                     }}>
                         <div style={{ fontSize: '48px' }}>⏳</div>
-                        <p style={{ margin: 0, fontSize: '16px' }}>Preparing translation...</p>
+                        <p style={{ margin: 0, fontSize: '16px' }}>准备翻译中...</p>
                         <p style={{ margin: 0, fontSize: '13px', opacity: 0.7 }}>
-                            Connecting to translation service
+                            正在连接翻译服务
                         </p>
                     </div>
                 ) : (
                     <p style={{ color: 'var(--vscode-descriptionForeground)' }}>
-                        Select a Markdown file and click "Translate with AI" to start.
+                        选择一个 Markdown 文件并点击"AI 翻译"开始。
                     </p>
                 )}
             </div>

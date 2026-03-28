@@ -103,7 +103,7 @@ export class TranslationController {
                     this.sendToWebview({
                         type: 'progress',
                         progress,
-                        status: `Translating... ${progress}%`
+                        status: `翻译中... ${progress}%`
                     });
 
                     yield { content: delta, done: false };
@@ -119,7 +119,7 @@ export class TranslationController {
                 console.log('[TranslationController] Translation aborted by signal');
                 return;
             }
-            throw new Error(`Translation failed: ${(error as Error).message}`);
+            throw new Error(`翻译失败: ${(error as Error).message}`);
         }
     }
 }

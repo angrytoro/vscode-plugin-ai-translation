@@ -1,14 +1,14 @@
-# Changelog
+# 更新日志
 
 ## [0.1.0] - 2025-02-01
 
-### Added
-- Initial public release
-- Real-time streaming translation with progress display
-- Streamdown integration for incremental markdown rendering
-- Session-based caching to avoid re-translation
-- Support for OpenAI-compatible APIs
-- Configurable target languages (zh-CN, en, ja, ko, fr, de, es)
-- Custom system prompt support
-- Translation preview panel (Ctrl+K Ctrl+T)
-- Smart background completion (translations ≥ 50% continue even if panel closed)
+### 新增
+- 首次公开发布
+- 实时流式翻译，带进度显示
+- 集成 Streamdown 用于增量 Markdown 渲染
+- 基于会话的缓存，避免重复翻译
+- 支持 OpenAI 兼容的 API
+- 可配置目标语言（zh-CN、en、ja、ko、fr、de、es）
+- 支持自定义系统提示词
+- 翻译预览面板（Ctrl+K Ctrl+T）
+- 智能后台完成（翻译进度 ≥ 50% 时即使关闭面板也会继续完成）

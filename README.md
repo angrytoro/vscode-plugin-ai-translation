@@ -1,252 +1,254 @@
-# AI Translation for Markdown
+# Markdown AI 翻译插件
 
-> Translate Markdown files using AI with real-time incremental rendering
+> 使用 AI 实时流式翻译 Markdown 文件
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![VSCode](https://img.shields.io/badge/VSCode-1.80.0%2B-blue.svg)](https://code.visualstudio.com/)
 
-## Features
+[English](README.md) | 简体中文
 
-- **🚀 Real-time Streaming** - Watch translations appear as AI generates them word by word
-- **💾 Smart Caching** - Never translate the same content twice, saves time and API costs
-- **🌍 Multiple Languages** - Support for Chinese, English, Japanese, Korean, French, German, and Spanish
-- **🔒 Secure API Key Storage** - Your API keys are encrypted in OS keychain, other extensions cannot access them
-- **⚙️ Highly Customizable** - Configure API endpoint, model, system prompts, and target language
-- **🔌 OpenAI Compatible** - Works with OpenAI, Azure OpenAI, and any OpenAI-compatible APIs
+## 功能特性
 
-## Security
+- **🚀 实时流式翻译** - 看着 AI 生成的翻译逐字出现，即时反馈
+- **💾 智能缓存** - 相同内容只翻译一次，节省时间和 API 费用
+- **🌍 多语言支持** - 支持中文、英语、日语、韩语、法语、德语和西班牙语
+- **🔒 安全密钥存储** - API 密钥加密存储在系统钥匙串中，其他扩展无法访问
+- **⚙️ 高度可定制** - 可配置 API 端点、模型、系统提示词和目标语言
+- **🔌 OpenAI 兼容** - 支持 OpenAI、Azure OpenAI 和任何 OpenAI 兼容的 API
 
-🔐 **Your API keys are protected!**
+## 安全性
 
-This extension uses VSCode's `secretStorage` API to securely store your API keys:
+🔐 **您的 API 密钥受到保护！**
 
-- ✅ **Encrypted Storage** - API keys are encrypted and stored in your OS keychain (Keychain on macOS, Credential Manager on Windows, libsecret on Linux)
-- ✅ **Isolated Access** - Only this extension can access your stored API keys
-- ✅ **No Leakage** - API keys are never stored in workspace settings or configuration files
-- ✅ **Git Safe** - Your API keys won't be accidentally committed to version control
-- ✅ **Extension Isolation** - Other VSCode extensions cannot read your API keys
+本插件使用 VSCode 的 `secretStorage` API 安全存储您的 API 密钥：
 
-## Installation
+- ✅ **加密存储** - API 密钥加密后存储在系统钥匙串中（macOS 的 Keychain、Windows 的凭据管理器、Linux 的 libsecret）
+- ✅ **访问隔离** - 只有本插件可以访问您存储的 API 密钥
+- ✅ **零泄露** - API 密钥从不存储在工作区设置或配置文件中
+- ✅ **Git 安全** - API 密钥不会被意外提交到版本控制系统
+- ✅ **扩展隔离** - 其他 VSCode 扩展无法读取您的 API 密钥
 
-### From Marketplace (Coming Soon)
+## 安装
 
-Search for "AI Translation for Markdown" in the VSCode Extensions marketplace.
+### 从应用市场安装（即将推出）
 
-### From VSIX
+在 VSCode 扩展市场中搜索 "AI Translation for Markdown"。
 
-1. Download the latest `.vsix` file from [Releases](https://github.com/angrytoro/vscode-plugin-ai-translation/releases)
-2. Open VSCode
-3. Press `Ctrl+Shift+P` (Mac: `Cmd+Shift+P`)
-4. Type "Extensions: Install from VSIX"
-5. Select the downloaded `.vsix` file
+### 从 VSIX 安装
 
-### From Source
+1. 从 [发布页面](https://github.com/angrytoro/vscode-plugin-ai-translation/releases) 下载最新的 `.vsix` 文件
+2. 打开 VSCode
+3. 按 `Ctrl+Shift+P`（Mac: `Cmd+Shift+P`）
+4. 输入 "Extensions: Install from VSIX"
+5. 选择下载的 `.vsix` 文件
+
+### 从源码安装
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/angrytoro/vscode-plugin-ai-translation.git
 cd vscode-plugin-ai-translation
 
-# Install dependencies
+# 安装依赖
 npm install
 
-# Compile
+# 编译
 npm run compile
 
-# Build webview
+# 构建前端界面
 npm run build:webview
 
-# Package extension
+# 打包扩展
 npm run package
 ```
 
-## Quick Start
+## 快速开始
 
-### 1. Set Your API Key
+### 1. 设置 API 密钥
 
-**First-time setup:**
+**首次使用设置：**
 
-When you use the translation feature for the first time, you'll be automatically prompted to set your API key.
+首次使用翻译功能时，系统会自动提示您设置 API 密钥。
 
-**Manual setup:**
+**手动设置：**
 
-1. Press `Ctrl+Shift+P` (Mac: `Cmd+Shift+P`) to open the Command Palette
-2. Type "AI Translation: Set API Key"
-3. Enter your API key in the password input box (input is masked for security)
-4. Press Enter to save
+1. 按 `Ctrl+Shift+P`（Mac: `Cmd+Shift+P`）打开命令面板
+2. 输入 "AI Translation: Set API Key"
+3. 在密码输入框中输入您的 API 密钥（输入会被掩码保护）
+4. 按回车键保存
 
-The API key will be securely stored in your OS keychain.
+API 密钥将安全地存储在您的系统钥匙串中。
 
-### 2. Configure (Optional)
+### 2. 配置（可选）
 
-Open VSCode Settings and search for "AI Translation" to configure:
+打开 VSCode 设置，搜索 "AI Translation" 进行配置：
 
-- **API Endpoint** - Default: `https://api.openai.com/v1`
-- **Model** - Default: `gpt-4`
-- **Target Language** - Default: `zh-CN` (Chinese Simplified)
+- **API 端点** - 默认：`https://api.openai.com/v1`
+- **模型** - 默认：`gpt-4`
+- **目标语言** - 默认：`zh-CN`（简体中文）
 
-### 3. Start Translating
+### 3. 开始翻译
 
-1. Open a Markdown file in VSCode
-2. Press `Ctrl+K Ctrl+T` (Mac: `Cmd+K Cmd+T`) or right-click and select "AI Translation: Open Preview"
-3. Watch the real-time translation appear in the preview panel!
+1. 在 VSCode 中打开一个 Markdown 文件
+2. 按 `Ctrl+K Ctrl+T`（Mac: `Cmd+K Cmd+T`）或右键点击选择 "AI Translation: Open Preview"
+3. 在预览面板中实时观看翻译结果！
 
-## Commands
+## 命令列表
 
-| Command | Description |
-|---------|-------------|
-| `AI Translation: Open Preview` | Open translation preview for current Markdown file |
-| `AI Translation: Open Settings` | Open VSCode settings for AI Translation |
-| `AI Translation: Test Connection` | Test your API connection |
-| `AI Translation: Set API Key` | Set or update your API key (stored securely) |
-| `AI Translation: Clear API Key` | Remove stored API key |
+| 命令 | 描述 |
+|------|------|
+| `AI Translation: Open Preview` | 打开当前 Markdown 文件的翻译预览 |
+| `AI Translation: Open Settings` | 打开 AI Translation 的 VSCode 设置 |
+| `AI Translation: Test Connection` | 测试您的 API 连接 |
+| `AI Translation: Set API Key` | 设置或更新您的 API 密钥（安全存储） |
+| `AI Translation: Clear API Key` | 删除已存储的 API 密钥 |
 
-## Configuration
+## 配置说明
 
-Configure the extension in VSCode Settings (search for "AI Translation"):
+在 VSCode 设置中配置本插件（搜索 "AI Translation"）：
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| `aiTranslation.apiEndpoint` | AI API endpoint URL | `https://api.openai.com/v1` |
-| `aiTranslation.model` | Model name for translation | `gpt-4` |
-| `aiTranslation.targetLanguage` | Target language for translation | `zh-CN` |
-| `aiTranslation.systemPrompt` | Custom system prompt (supports `{targetLanguage}` placeholder) | Expert translation prompt |
-| `aiTranslation.autoTranslate` | Automatically translate when file changes | `false` (disabled) |
+| 设置项 | 描述 | 默认值 |
+|--------|------|--------|
+| `aiTranslation.apiEndpoint` | AI API 端点 URL | `https://api.openai.com/v1` |
+| `aiTranslation.model` | 用于翻译的模型名称 | `gpt-4` |
+| `aiTranslation.targetLanguage` | 翻译的目标语言 | `zh-CN` |
+| `aiTranslation.systemPrompt` | 自定义系统提示词（支持 `{targetLanguage}` 占位符） | 专家翻译提示词 |
+| `aiTranslation.autoTranslate` | 文件更改时自动翻译 | `false`（已禁用） |
 
-### Supported Languages
+### 支持的语言
 
-| Language | Code |
-|----------|------|
-| Chinese (Simplified) | `zh-CN` |
+| 语言 | 代码 |
+|------|------|
+| 中文（简体） | `zh-CN` |
 | English | `en` |
-| Japanese | `ja` |
-| Korean | `ko` |
-| French | `fr` |
-| German | `de` |
-| Spanish | `es` |
+| 日本語 | `ja` |
+| 한국어 | `ko` |
+| Français | `fr` |
+| Deutsch | `de` |
+| Español | `es` |
 
-## Advanced Usage
+## 高级用法
 
-### Using Custom API Endpoints
+### 使用自定义 API 端点
 
-This extension works with any OpenAI-compatible API:
+本插件可使用任何 OpenAI 兼容的 API：
 
-**Azure OpenAI:**
+**Azure OpenAI：**
 
-1. Set `aiTranslation.apiEndpoint` to your Azure endpoint
-2. Set `aiTranslation.model` to your deployment name
+1. 将 `aiTranslation.apiEndpoint` 设置为您的 Azure 端点
+2. 将 `aiTranslation.model` 设置为您的部署名称
 
-**Local LLMs (Ollama, LM Studio, etc.):**
+**本地大模型（Ollama、LM Studio 等）：**
 
-1. Run your local server with OpenAI-compatible API
-2. Set `aiTranslation.apiEndpoint` to your local endpoint (e.g., `http://localhost:11434/v1`)
-3. Set `aiTranslation.model` to your model name (e.g., `llama2`, `mistral`)
+1. 运行带有 OpenAI 兼容 API 的本地服务器
+2. 将 `aiTranslation.apiEndpoint` 设置为本地端点（例如：`http://localhost:11434/v1`）
+3. 将 `aiTranslation.model` 设置为模型名称（例如：`llama2`、`mistral`）
 
-### Custom System Prompt
+### 自定义系统提示词
 
-Customize translation behavior by modifying the system prompt:
+通过修改系统提示词来自定义翻译行为：
 
 ```
-You are a technical translator. Translate the following markdown content to {targetLanguage}.
-Keep technical terms in English. Preserve all formatting and code blocks.
+你是一名技术翻译。将以下 Markdown 内容翻译成 {targetLanguage}。
+保持技术术语为英文。保留所有格式和代码块。
 ```
 
-The `{targetLanguage}` placeholder will be automatically replaced with your configured target language.
+`{targetLanguage}` 占位符会被自动替换为您配置的目标语言。
 
-### Testing Your Connection
+### 测试连接
 
-Before translating important documents, test your API setup:
+在翻译重要文档之前，先测试您的 API 设置：
 
-1. Press `Ctrl+Shift+P` (Mac: `Cmd+Shift+P`)
-2. Type "AI Translation: Test Connection"
-3. You'll see a success or error message
+1. 按 `Ctrl+Shift+P`（Mac: `Cmd+Shift+P`）
+2. 输入 "AI Translation: Test Connection"
+3. 您将看到成功或错误消息
 
-## FAQ
+## 常见问题
 
-### Q: Where is my API key stored?
+### Q: 我的 API 密钥存储在哪里？
 
-**A:** Your API key is encrypted and stored in your operating system's keychain:
-- **macOS**: Keychain Access
-- **Windows**: Credential Manager
-- **Linux**: libsecret (GNOME Keyring / KWallet)
+**A:** 您的 API 密钥经过加密并存储在操作系统的钥匙串中：
+- **macOS**: 钥匙串访问（Keychain Access）
+- **Windows**: 凭据管理器（Credential Manager）
+- **Linux**: libsecret（GNOME Keyring / KWallet）
 
-It is NOT stored in workspace settings or configuration files.
+它**不会**存储在工作区设置或配置文件中。
 
-### Q: Can other VSCode extensions read my API key?
+### Q: 其他 VSCode 扩展能读取我的 API 密钥吗？
 
-**A:** No. The API key is stored using VSCode's `secretStorage` API, which only allows this extension to access it.
+**A:** 不能。API 密钥使用 VSCode 的 `secretStorage` API 存储，只允许本插件访问。
 
-### Q: Which AI services are supported?
+### Q: 支持哪些 AI 服务？
 
-**A:** Any service that provides an OpenAI-compatible API, including:
-- OpenAI (GPT-3.5, GPT-4, etc.)
+**A:** 任何提供 OpenAI 兼容 API 的服务，包括：
+- OpenAI（GPT-3.5、GPT-4 等）
 - Azure OpenAI
-- Anthropic (via compatibility layers)
-- Local LLMs (Ollama, LM Studio, etc.)
-- Other OpenAI-compatible APIs
+- Anthropic（通过兼容层）
+- 本地大模型（Ollama、LM Studio 等）
+- 其他 OpenAI 兼容的 API
 
-### Q: How do I update my API key?
+### Q: 如何更新我的 API 密钥？
 
-**A:** Use "AI Translation: Set API Key" command to overwrite the existing key, or use "AI Translation: Clear API Key" followed by setting a new key.
+**A:** 使用 "AI Translation: Set API Key" 命令覆盖现有密钥，或使用 "AI Translation: Clear API Key" 清除后重新设置。
 
-### Q: Why is my translation not working?
+### Q: 为什么翻译无法工作？
 
-**A:** Check the following:
-1. Verify your API key is set: Use "AI Translation: Test Connection"
-2. Check your API endpoint and model settings
-3. Ensure you have sufficient API credits/quota
-4. Check the VSCode Developer Console (Help → Toggle Developer Tools) for error messages
+**A:** 检查以下事项：
+1. 验证 API 密钥已设置：使用 "AI Translation: Test Connection"
+2. 检查 API 端点和模型设置
+3. 确保您有足够的 API 配额/额度
+4. 查看 VSCode 开发者控制台（Help → Toggle Developer Tools）的错误消息
 
-### Q: Does this extension work offline?
+### Q: 这个插件可以离线工作吗？
 
-**A:** No. An internet connection is required to communicate with AI APIs. However, previously translated content is cached locally.
+**A:** 不能。需要互联网连接才能与 AI API 通信。但是，之前翻译的内容会缓存在本地。
 
-### Q: Can I translate to multiple languages at once?
+### Q: 我可以同时翻译成多种语言吗？
 
-**A:** Not directly. You need to change the `targetLanguage` setting and translate again. Each language's translation is cached separately.
+**A:** 不能直接实现。您需要更改 `targetLanguage` 设置并重新翻译。每种语言的翻译是单独缓存的。
 
-## Requirements
+## 系统要求
 
-- **VSCode**: Version 1.80.0 or higher
-- **API**: OpenAI API key or compatible API
-- **Account**: Valid API account with sufficient credits/quota
+- **VSCode**: 版本 1.80.0 或更高
+- **API**: OpenAI API 密钥或兼容的 API
+- **账户**: 有效的 API 账户，且有足够的额度/配额
 
-## Troubleshooting
+## 故障排除
 
-### "API key is required" Error
+### "API key is required" 错误
 
-**Solution:** Set your API key using "AI Translation: Set API Key" command.
+**解决方案：** 使用 "AI Translation: Set API Key" 命令设置您的 API 密钥。
 
-### "Connection failed" Error
+### "Connection failed" 错误
 
-**Possible causes:**
-- Incorrect API endpoint
-- Invalid API key
-- Network connectivity issues
-- API service downtime
+**可能的原因：**
+- API 端点不正确
+- API 密钥无效
+- 网络连接问题
+- API 服务宕机
 
-**Solution:** Use "AI Translation: Test Connection" to diagnose the issue.
+**解决方案：** 使用 "AI Translation: Test Connection" 诊断问题。
 
-### Translation Quality Issues
+### 翻译质量问题
 
-**Tips:**
-- Try different models (GPT-4 generally provides better quality than GPT-3.5)
-- Customize the system prompt for your specific needs
-- For technical content, consider keeping technical terms in English
+**提示：**
+- 尝试不同的模型（GPT-4 通常比 GPT-3.5 提供更好的质量）
+- 根据您的具体需求自定义系统提示词
+- 对于技术内容，考虑将技术术语保持为英文
 
-## License
+## 许可证
 
-MIT License - see [LICENSE](LICENSE) file for details
+MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
-## Contributing
+## 贡献
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+欢迎贡献！请随时提交 Pull Request。
 
-## Support
+## 支持
 
-- **Issues**: [GitHub Issues](https://github.com/angrytoro/vscode-plugin-ai-translation/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/angrytoro/vscode-plugin-ai-translation/discussions)
+- **问题反馈**: [GitHub Issues](https://github.com/angrytoro/vscode-plugin-ai-translation/issues)
+- **讨论交流**: [GitHub Discussions](https://github.com/angrytoro/vscode-plugin-ai-translation/discussions)
 
 ---
 
-Made with ❤️ for the Markdown and AI community
+为 Markdown 和 AI 社区用 ❤️ 制作

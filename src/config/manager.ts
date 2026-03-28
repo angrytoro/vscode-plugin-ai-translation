@@ -38,40 +38,40 @@ export class ConfigManager {
 
     async promptForApiKey(): Promise<void> {
         const input = await vscode.window.showInputBox({
-            prompt: 'Enter your AI API key',
+            prompt: '请输入您的 AI API 密钥',
             password: true, // Masks input with dots
             ignoreFocusOut: true,
         });
 
         if (input) {
             await this.setApiKey(input);
-            vscode.window.showInformationMessage('API key saved securely');
+            vscode.window.showInformationMessage('API 密钥已安全保存');
         }
     }
 
     async clearApiKey(): Promise<void> {
         await this.context.secrets.delete(this.SECRET_KEY);
-        vscode.window.showInformationMessage('API key cleared');
+        vscode.window.showInformationMessage('API 密钥已清除');
     }
 
     validateConfig(config: TranslationConfig): ValidationResult {
         if (!config.apiKey) {
-            return { valid: false, error: 'API key is required' };
+            return { valid: false, error: '需要 API 密钥' };
         }
         if (!config.apiEndpoint) {
-            return { valid: false, error: 'API endpoint is required' };
+            return { valid: false, error: '需要 API 接口地址' };
         }
         if (!config.model) {
-            return { valid: false, error: 'Model name is required' };
+            return { valid: false, error: '需要模型名称' };
         }
         try {
             const url = new URL(config.apiEndpoint);
             // SSRF protection: only allow http and https protocols
             if (!['http:', 'https:'].includes(url.protocol)) {
-                return { valid: false, error: 'API endpoint must use http:// or https:// protocol' };
+                return { valid: false, error: 'API 接口地址必须使用 http:// 或 https:// 协议' };
             }
         } catch {
-            return { valid: false, error: 'Invalid API endpoint URL' };
+            return { valid: false, error: '无效的 API 接口地址' };
         }
         return { valid: true };
     }

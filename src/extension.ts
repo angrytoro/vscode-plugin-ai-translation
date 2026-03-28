@@ -23,12 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
     async function showPreview() {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-            vscode.window.showWarningMessage('No active Markdown file found');
+            vscode.window.showWarningMessage('未找到活动的 Markdown 文件');
             return;
         }
 
         if (editor.document.languageId !== 'markdown') {
-            vscode.window.showWarningMessage('Please open a Markdown file');
+            vscode.window.showWarningMessage('请打开一个 Markdown 文件');
             return;
         }
 
@@ -120,8 +120,8 @@ export function activate(context: vscode.ExtensionContext) {
             // 如果是缺少 API key，提供设置选项
             if (validation.error?.includes('API key is required')) {
                 const shouldSet = await vscode.window.showInformationMessage(
-                    'Please set your AI API key first',
-                    'Set API Key'
+                    '请先设置您的 AI API 密钥',
+                    '设置 API 密钥'
                 );
                 if (shouldSet) {
                     await configManager.promptForApiKey();
@@ -129,7 +129,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
             previewPanel.webview.postMessage({
                 type: 'error',
-                error: `Configuration error: ${validation.error}`
+                error: `配置错误: ${validation.error}`
             });
             return;
         }
@@ -242,15 +242,15 @@ export function activate(context: vscode.ExtensionContext) {
             await vscode.window.withProgress(
                 {
                     location: vscode.ProgressLocation.Notification,
-                    title: 'Testing AI API connection...',
+                    title: '正在测试 AI API 连接...',
                     cancellable: false,
                 },
                 async () => {
                     const result = await configManager.testConnection();
                     if (result.valid) {
-                        vscode.window.showInformationMessage('✅ Connection successful!');
+                        vscode.window.showInformationMessage('✅ 连接成功!');
                     } else {
-                        vscode.window.showErrorMessage(`❌ Connection failed: ${result.error}`);
+                        vscode.window.showErrorMessage(`❌ 连接失败: ${result.error}`);
                     }
                 }
             );
@@ -307,12 +307,12 @@ function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): stri
     const nonce = getNonce();
 
     return `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}'; script-src 'nonce-${nonce}'; font-src ${webview.cspSource}; img-src ${webview.cspSource} data:;">
-    <title>AI Translation Preview</title>
+    <title>AI 翻译预览</title>
     <base href="${baseUri}/">
     <link rel="stylesheet" href="${cssUri}">
     <style nonce="${nonce}">
