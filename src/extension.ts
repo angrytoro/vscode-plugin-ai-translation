@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as crypto from 'crypto';
 import { ConfigManager } from './config/manager';
 import { TranslationCache } from './translation/cache';
 import { generateHash } from './utils/hash';
@@ -140,13 +141,13 @@ export function activate(context: vscode.ExtensionContext) {
         const fileUri = document.uri.toString();
         const targetLanguage = config.targetLanguage;
         const fileHash = generateHash(content);
-        const cacheKey = `${fileUri}-${targetLanguage}-${fileHash}`;
+        // Use hash-based cache key to prevent cache key collision/poisoning
+        const cacheKey = generateHash(`${fileUri}\0${targetLanguage}\0${fileHash}`);
 
         console.log('Translating document:', {
             uri: fileUri,
             length: content.length,
             targetLanguage,
-            cacheKey
         });
 
         // 检查缓存
@@ -288,6 +289,13 @@ export function deactivate() {
 }
 
 /**
+ * Generate a cryptographic nonce for CSP
+ */
+function getNonce(): string {
+    return crypto.randomBytes(16).toString('base64');
+}
+
+/**
  * 生成 Webview HTML
  */
 function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): string {
@@ -296,16 +304,18 @@ function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): stri
     const cssPath = vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'app-index.css');
     const cssUri = webview.asWebviewUri(cssPath);
     const baseUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview'));
+    const nonce = getNonce();
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}'; script-src 'nonce-${nonce}'; font-src ${webview.cspSource}; img-src ${webview.cspSource} data:;">
     <title>AI Translation Preview</title>
     <base href="${baseUri}/">
     <link rel="stylesheet" href="${cssUri}">
-    <style>
+    <style nonce="${nonce}">
         body {
             margin: 0;
             padding: 0;
@@ -399,7 +409,7 @@ function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): stri
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="${scriptUri}"></script>
+    <script nonce="${nonce}" type="module" src="${scriptUri}"></script>
 </body>
 </html>`;
 }

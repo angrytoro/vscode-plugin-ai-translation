@@ -129,6 +129,35 @@ describe('ConfigManager', () => {
             const result = configManager.validateConfig(customConfig);
             expect(result.valid).toBe(true);
         });
+
+        test('should reject non-http/https protocols (SSRF protection)', () => {
+            const fileConfig: TranslationConfig = {
+                apiEndpoint: 'file:///etc/passwd',
+                apiKey: 'test-key',
+                model: 'gpt-4',
+                targetLanguage: 'zh-CN',
+                systemPrompt: 'Translate to {targetLanguage}',
+                autoTranslate: false,
+            };
+
+            const result = configManager.validateConfig(fileConfig);
+            expect(result.valid).toBe(false);
+            expect(result.error).toBe('API endpoint must use http:// or https:// protocol');
+        });
+
+        test('should allow http protocol for local development', () => {
+            const httpConfig: TranslationConfig = {
+                apiEndpoint: 'http://localhost:11434/v1',
+                apiKey: 'test-key',
+                model: 'llama3',
+                targetLanguage: 'zh-CN',
+                systemPrompt: 'Translate to {targetLanguage}',
+                autoTranslate: false,
+            };
+
+            const result = configManager.validateConfig(httpConfig);
+            expect(result.valid).toBe(true);
+        });
     });
 
     describe('testConnection', () => {

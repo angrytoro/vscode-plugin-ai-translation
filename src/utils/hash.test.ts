@@ -16,25 +16,25 @@ describe('generateHash', () => {
         expect(hash1).not.toBe(hash2);
     });
 
-    test('should generate MD5 hash of correct length', () => {
+    test('should generate SHA-256 hash of correct length', () => {
         const hash = generateHash('test');
-        expect(hash).toHaveLength(32); // MD5 produces 32 character hex string
+        expect(hash).toHaveLength(64); // SHA-256 produces 64 character hex string
     });
 
     test('should handle empty string', () => {
         const hash = generateHash('');
-        expect(hash).toHaveLength(32);
+        expect(hash).toHaveLength(64);
     });
 
     test('should handle special characters', () => {
         const input = '测试中文字符 🚀';
         const hash = generateHash(input);
-        expect(hash).toHaveLength(32);
+        expect(hash).toHaveLength(64);
     });
 
     test('should handle long text', () => {
         const longText = 'a'.repeat(10000);
         const hash = generateHash(longText);
-        expect(hash).toHaveLength(32);
+        expect(hash).toHaveLength(64);
     });
 });

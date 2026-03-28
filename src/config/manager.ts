@@ -65,7 +65,11 @@ export class ConfigManager {
             return { valid: false, error: 'Model name is required' };
         }
         try {
-            new URL(config.apiEndpoint);
+            const url = new URL(config.apiEndpoint);
+            // SSRF protection: only allow http and https protocols
+            if (!['http:', 'https:'].includes(url.protocol)) {
+                return { valid: false, error: 'API endpoint must use http:// or https:// protocol' };
+            }
         } catch {
             return { valid: false, error: 'Invalid API endpoint URL' };
         }

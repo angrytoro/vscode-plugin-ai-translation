@@ -26,9 +26,9 @@ jest.vscode.mock.js
 coverage/**
 
 # Dependencies
-node_modules/**
-.yarnrc
-package-lock.json
+# Note: vsce automatically excludes devDependencies, so we keep dependencies
+# .yarnrc
+# package-lock.json
 
 # Build outputs
 *.vsix
