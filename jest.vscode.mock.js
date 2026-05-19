@@ -14,6 +14,7 @@ const vscodeUri = {
 module.exports = {
     Uri: vscodeUri,
     workspace: {
+        openTextDocument: jest.fn(),
         getConfiguration: jest.fn(() => ({
             get: jest.fn((key, defaultValue) => {
                 const defaults = {
@@ -32,6 +33,11 @@ module.exports = {
         showWarningMessage: jest.fn(),
         showErrorMessage: jest.fn(),
         withProgress: jest.fn(),
+        createWebviewPanel: jest.fn(),
+        activeTextEditor: undefined,
+    },
+    ViewColumn: {
+        Two: 2,
     },
     commands: {
         executeCommand: jest.fn(),
