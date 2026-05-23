@@ -350,6 +350,27 @@ function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): stri
         table tr:nth-child(even) {
             background-color: var(--vscode-editor-inactiveSelectionBackground);
         }
+        .frontmatter-table {
+            margin: 0 0 24px;
+            table-layout: fixed;
+        }
+        .frontmatter-table th {
+            width: 112px;
+            min-width: 112px;
+            text-align: left;
+            vertical-align: top;
+            background-color: transparent;
+            font-weight: 600;
+            color: var(--vscode-foreground);
+        }
+        .frontmatter-table td {
+            vertical-align: top;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+        .frontmatter-table tr:nth-child(even) {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
 
         /* 任务列表样式 */
         input[type="checkbox"] {
@@ -378,6 +399,10 @@ function getWebviewHtml(extensionUri: vscode.Uri, webview: vscode.Webview): stri
         pre code {
             padding: 0;
             background: none;
+        }
+        [data-streamdown="code-block-body"] code > span:last-child:empty,
+        [data-streamdown="code-block-body"] code > span:last-child:has(> span:only-child:empty) {
+            display: none;
         }
 
         /* 引用块样式 */
