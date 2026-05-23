@@ -15,21 +15,25 @@ describe('extension preview behavior', () => {
     let translateMock: jest.Mock;
 
     const markdownUri = {
+        fsPath: '/workspace/current.md',
+        path: '/workspace/current.md',
         toString: () => 'file:///workspace/current.md',
     };
 
     const secondMarkdownUri = {
+        fsPath: '/workspace/second.md',
+        path: '/workspace/second.md',
         toString: () => 'file:///workspace/second.md',
     };
 
     const markdownDocument = {
-        languageId: 'markdown',
+        languageId: 'plaintext',
         uri: markdownUri,
         getText: jest.fn(() => '# Current'),
     };
 
     const secondMarkdownDocument = {
-        languageId: 'markdown',
+        languageId: 'plaintext',
         uri: secondMarkdownUri,
         getText: jest.fn(() => '# Second'),
     };
@@ -74,6 +78,10 @@ describe('extension preview behavior', () => {
         (vscode.window as any).activeTextEditor = {
             document: markdownDocument,
         };
+        (vscode.window as any).visibleTextEditors = [
+            { document: markdownDocument },
+        ];
+        (vscode.window as any).tabGroups.activeTabGroup.activeTab = undefined;
         (vscode.window.createWebviewPanel as jest.Mock).mockReturnValue({
             webview: {
                 html: '',
@@ -109,12 +117,45 @@ describe('extension preview behavior', () => {
         return commands['aiTranslation.openPreview'](resource);
     }
 
+    function openPreview() {
+        activate(context);
+        return commands['aiTranslation.openPreview']();
+    }
+
     test('opening preview from a markdown resource binds that document instead of the active editor', async () => {
         (vscode.window as any).activeTextEditor = {
             document: markdownDocument,
         };
 
         await openPreviewForResource(secondMarkdownUri);
+        await webviewMessageHandler?.({ type: 'ready' });
+
+        expect(vscode.workspace.openTextDocument).toHaveBeenCalledWith(secondMarkdownUri);
+        expect(translateMock.mock.calls[0][0]).toBe('# Second');
+    });
+
+    test('shortcut invocation falls back to a visible markdown file when no active editor is available', async () => {
+        (vscode.window as any).activeTextEditor = undefined;
+        (vscode.window as any).visibleTextEditors = [
+            { document: secondMarkdownDocument },
+        ];
+
+        await openPreview();
+        await webviewMessageHandler?.({ type: 'ready' });
+
+        expect(translateMock.mock.calls[0][0]).toBe('# Second');
+    });
+
+    test('shortcut invocation falls back to the active markdown tab when no editor is focused', async () => {
+        (vscode.window as any).activeTextEditor = undefined;
+        (vscode.window as any).visibleTextEditors = [];
+        (vscode.window as any).tabGroups.activeTabGroup.activeTab = {
+            input: {
+                uri: secondMarkdownUri,
+            },
+        };
+
+        await openPreview();
         await webviewMessageHandler?.({ type: 'ready' });
 
         expect(vscode.workspace.openTextDocument).toHaveBeenCalledWith(secondMarkdownUri);
