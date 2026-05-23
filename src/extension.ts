@@ -20,14 +20,16 @@ export function activate(context: vscode.ExtensionContext) {
     /**
      * 创建或显示预览面板
      */
-    async function showPreview() {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
+    async function showPreview(resourceUri?: vscode.Uri) {
+        const document = await resolvePreviewDocument(resourceUri);
+
+        if (!document) {
+            logPreviewDocumentResolutionFailure(resourceUri);
             vscode.window.showWarningMessage('未找到活动的 Markdown 文件');
             return;
         }
 
-        if (editor.document.languageId !== 'markdown') {
+        if (!isMarkdownFile(document)) {
             vscode.window.showWarningMessage('请打开一个 Markdown 文件');
             return;
         }
@@ -38,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         // 创建新的预览面板
-        previewPanel = vscode.window.createWebviewPanel(
+        const panel = vscode.window.createWebviewPanel(
             'aiTranslation.preview', // internal type
             'AI Translation Preview',
             vscode.ViewColumn.Two, // 在第二列显示
@@ -50,18 +52,22 @@ export function activate(context: vscode.ExtensionContext) {
                 retainContextWhenHidden: true,
             }
         );
+        previewPanel = panel;
 
         // 加载 HTML
-        previewPanel.webview.html = getWebviewHtml(context.extensionUri, previewPanel.webview);
+        panel.webview.html = getWebviewHtml(context.extensionUri, panel.webview);
 
         // 监听来自 webview 的消息
-        previewPanel.webview.onDidReceiveMessage(
+        panel.webview.onDidReceiveMessage(
             async (message) => {
+                if (previewPanel !== panel) {
+                    return;
+                }
                 console.log('[Extension] Received message from webview:', message);
                 switch (message.type) {
                     case 'ready':
                         // Webview 已准备好，发送初始内容
-                        await translateDocument(editor.document);
+                        await translateDocument(document);
                         break;
                     case 'retry':
                         await vscode.commands.executeCommand('aiTranslation.openPreview');
@@ -74,7 +80,10 @@ export function activate(context: vscode.ExtensionContext) {
         );
 
         // 监听面板关闭事件
-        previewPanel.onDidDispose(() => {
+        panel.onDidDispose(() => {
+            if (previewPanel !== panel) {
+                return;
+            }
             console.log('[Extension] Webview disposed');
 
             if (currentTranslationService) {
@@ -100,6 +109,39 @@ export function activate(context: vscode.ExtensionContext) {
 
             previewPanel = undefined;
         });
+    }
+
+    async function resolvePreviewDocument(resourceUri?: vscode.Uri): Promise<vscode.TextDocument | undefined> {
+        if (resourceUri) {
+            return vscode.workspace.openTextDocument(resourceUri);
+        }
+
+        const activeDocument = vscode.window.activeTextEditor?.document;
+        if (activeDocument && isMarkdownFile(activeDocument)) {
+            return activeDocument;
+        }
+
+        const visibleMarkdownDocument = vscode.window.visibleTextEditors.find(editor => isMarkdownFile(editor.document))?.document;
+        if (visibleMarkdownDocument) {
+            return visibleMarkdownDocument;
+        }
+
+        const activeTabUri = getActiveTabTextUri();
+        if (activeTabUri && isMarkdownUri(activeTabUri)) {
+            return vscode.workspace.openTextDocument(activeTabUri);
+        }
+
+        return undefined;
+    }
+
+    function getActiveTabTextUri(): vscode.Uri | undefined {
+        const input = (vscode.window.tabGroups?.activeTabGroup?.activeTab?.input ?? undefined) as {
+            uri?: vscode.Uri;
+            modified?: vscode.Uri;
+            original?: vscode.Uri;
+        } | undefined;
+
+        return input?.uri ?? input?.modified ?? input?.original;
     }
 
     /**
@@ -221,9 +263,9 @@ export function activate(context: vscode.ExtensionContext) {
     // 注册打开预览命令
     const openPreviewCommand = vscode.commands.registerCommand(
         'aiTranslation.openPreview',
-        async () => {
+        async (resourceUri?: vscode.Uri) => {
             console.log('=== Opening preview ===');
-            await showPreview();
+            await showPreview(resourceUri);
         }
     );
 
@@ -286,6 +328,44 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
     console.log('AI Translation Extension deactivated');
+}
+
+function isMarkdownFile(document: vscode.TextDocument): boolean {
+    return isMarkdownUri(document.uri);
+}
+
+function isMarkdownUri(uri: vscode.Uri): boolean {
+    const fileName = uri.fsPath || uri.path;
+    return fileName.toLowerCase().endsWith('.md');
+}
+
+function logPreviewDocumentResolutionFailure(resourceUri?: vscode.Uri) {
+    const activeDocument = vscode.window.activeTextEditor?.document;
+    const visibleEditors = vscode.window.visibleTextEditors.map(editor => editor.document);
+    const activeTabInput = (vscode.window.tabGroups?.activeTabGroup?.activeTab?.input ?? undefined) as {
+        uri?: vscode.Uri;
+        modified?: vscode.Uri;
+        original?: vscode.Uri;
+    } | undefined;
+    const activeTabUri = activeTabInput?.uri ?? activeTabInput?.modified ?? activeTabInput?.original;
+
+    console.log('[AI Translation] No markdown document found for preview', {
+        resourceUri: formatUriForLog(resourceUri),
+        activeDocument: activeDocument ? formatDocumentForLog(activeDocument) : undefined,
+        visibleDocuments: visibleEditors.map(formatDocumentForLog),
+        activeTabUri: formatUriForLog(activeTabUri),
+    });
+}
+
+function formatDocumentForLog(document: vscode.TextDocument) {
+    return {
+        uri: formatUriForLog(document.uri),
+        languageId: document.languageId,
+    };
+}
+
+function formatUriForLog(uri?: vscode.Uri): string | undefined {
+    return uri ? (uri.fsPath || uri.path || uri.toString()) : undefined;
 }
 
 /**
